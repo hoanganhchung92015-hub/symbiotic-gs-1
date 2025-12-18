@@ -1,6 +1,11 @@
-import { GoogleGenerativeAI } from "@google/generative-ai"; // Khớp với package.json của bạn
+import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai"; // Khớp với package.json của bạn
 // Dùng import.meta.env để hết lỗi "Cannot find name process"
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
+const genAI = new GoogleGenerativeAI(API_KEY);
+const model = genAI.getGenerativeModel({ 
+  model: "gemini-1.5-flash", // Lưu ý: gemini-3-flash-preview hiện chưa phổ biến, nên dùng 1.5-flash để ổn định
+});
+
 import { AIResponse } from "../types";
 
 /**
@@ -12,7 +17,6 @@ export const generateStudyContent = async (
   prompt: string,
   image?: string // Base64 encoded string
 ): Promise<AIResponse> => {
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
   const systemInstruction = `
     Bạn là Symbiotic AI Pro - AI Trợ lý Giáo dục Đa năng tốc độ cao cho học sinh Việt Nam.
     Nhiệm vụ: Phân tích nội dung môn ${subject} và cung cấp phản hồi JSON chính xác tuyệt đối về mặt khoa học.
