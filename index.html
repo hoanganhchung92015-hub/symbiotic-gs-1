@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { AIResponse } from "../types";
 
-// Vite bắt buộc dùng tiền tố VITE_ để nạp biến môi trường
+// Vite bắt buộc phải dùng VITE_ để nạp biến môi trường
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
 export const generateStudyContent = async (
@@ -10,11 +10,11 @@ export const generateStudyContent = async (
   image?: string 
 ): Promise<AIResponse> => {
   
-  if (!API_KEY) throw new Error("API Key chưa được cấu hình trên Vercel.");
+  if (!API_KEY) throw new Error("API Key chưa được cấu hình.");
 
   const genAI = new GoogleGenerativeAI(API_KEY);
   
-  // Sử dụng gemini-1.5-flash để đảm bảo tính ổn định và tốc độ
+  // Sử dụng gemini-1.5-flash để đảm bảo tốc độ và tính ổn định
   const model = genAI.getGenerativeModel({
     model: "gemini-1.5-flash",
     generationConfig: {
@@ -52,9 +52,7 @@ export const generateStudyContent = async (
   const parts: any[] = [{ text: prompt }];
   if (image) {
     const base64Data = image.includes(",") ? image.split(",")[1] : image;
-    parts.push({
-      inlineData: { mimeType: "image/jpeg", data: base64Data }
-    });
+    parts.push({ inlineData: { mimeType: "image/jpeg", data: base64Data } });
   }
 
   try {
@@ -62,13 +60,14 @@ export const generateStudyContent = async (
       contents: [{ role: "user", parts }],
       systemInstruction: {
         role: "system",
-        parts: [{ text: `Bạn là trợ lý giáo dục Symbiotic AI Pro. Phân tích môn ${subject} và trả về JSON khoa học.` }]
+        parts: [{ text: `Bạn là trợ lý giáo dục Symbiotic AI. Phân tích môn ${subject} và trả về JSON.` }]
       }
     });
 
-    return JSON.parse(result.response.text()) as AIResponse;
+    const text = result.response.text();
+    return JSON.parse(text) as AIResponse;
   } catch (error) {
-    console.error("Lỗi gọi Gemini API:", error);
-    throw new Error("Không thể kết nối với AI. Hãy kiểm tra lại API Key.");
+    console.error("Lỗi API Gemini:", error);
+    throw new Error("Không thể kết nối với AI. Hãy kiểm tra API Key.");
   }
 };
