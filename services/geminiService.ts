@@ -1,16 +1,12 @@
+// Sửa import từ @google/genai thành @google/generative-ai
 import { GoogleGenerativeAI, SchemaType } from "@google/generative-ai";
 import { AIResponse } from "../types";
 
-// 1. Dùng biến môi trường chuẩn cho Vite
+// Vite bắt buộc dùng tiền tố VITE_ để nạp biến từ Vercel
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
-export const generateStudyContent = async (
-  subject: string,
-  prompt: string,
-  image?: string 
-): Promise<AIResponse> => {
-  
-  if (!API_KEY) throw new Error("API Key chưa được cấu hình trên Vercel.");
+export const generateStudyContent = async (subject: string, prompt: string, image?: string): Promise<AIResponse> => {
+  if (!API_KEY) throw new Error("API Key chưa được cấu hình.");
 
   // 2. Khởi tạo SDK đúng cách
   const genAI = new GoogleGenerativeAI(API_KEY);
