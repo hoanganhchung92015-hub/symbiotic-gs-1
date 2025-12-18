@@ -1,6 +1,4 @@
-
 import { GoogleGenerativeAI } from "@google/generative-ai"; // Khớp với package.json của bạn
-
 // Dùng import.meta.env để hết lỗi "Cannot find name process"
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 import { AIResponse } from "../types";
