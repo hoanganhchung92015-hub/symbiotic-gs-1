@@ -11,8 +11,7 @@ export const generateStudyContent = async (
   prompt: string,
   image?: string // Base64 encoded string
 ): Promise<AIResponse> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
   const systemInstruction = `
     Bạn là Symbiotic AI Pro - AI Trợ lý Giáo dục Đa năng tốc độ cao cho học sinh Việt Nam.
     Nhiệm vụ: Phân tích nội dung môn ${subject} và cung cấp phản hồi JSON chính xác tuyệt đối về mặt khoa học.
